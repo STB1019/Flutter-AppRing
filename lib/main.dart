@@ -55,16 +55,18 @@ class _MyHomePageState extends State<MyHomePage> {
   initState() {
     super.initState();
     formVarText = widget.title;
-    _formVarBool=false;
+    _formVarBool = false;
   }
 
   @override
   Widget build(BuildContext context) {
-    Orientation orientation = MediaQuery.of(context).orientation;
+    Orientation orientation = MediaQuery
+        .of(context)
+        .orientation;
     return Scaffold(
       appBar: AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
           title: Text(widget.title),
           actions: <Widget>[
             Builder(
@@ -73,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   icon: Icon(Icons.agriculture),
                   onPressed: () {
                     SnackBar snackbar =
-                        SnackBar(content: Text("Yo, I'm here!"));
+                    SnackBar(content: Text("Yo, I'm here!"));
                     Scaffold.of(context).showSnackBar(snackbar);
                   },
                 );
@@ -84,36 +86,39 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: <Widget>[
             TextFormField(
-              initialValue: formVarText,
-              validator:(String val){
-                if(val.trim().compareTo("tummolo")==0)
-                  return null;
-                return "ERRORE!";
-              }
+                initialValue: formVarText,
+                validator: (String val) {
+                  if (val.trim().compareTo("tummolo") == 0)
+                    return null;
+                  return "ERRORE!";
+                }
             ),
-            common_widget.formCheckboxLitTile(_formVarBool, (bool newValue){
-
-              setState((){
-                _formVarBool=newValue;
+            common_widget.formCheckboxLitTile(_formVarBool, (bool newValue) {
+              setState(() {
+                _formVarBool = newValue;
               });
             })
           ],
         ),
         onChanged: () {},
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            SnackBar snackBar=SnackBar(content:Text("Salvataggio in corso"));
-            Scaffold.of(context).showSnackBar(snackBar);
-          });
-        },
-        tooltip: 'Invio',
-        child: Icon(
-          Icons.send_sharp,
-          color: Colors.green[300],
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: Builder(builder: (BuildContext context) {
+        return FloatingActionButton(
+          onPressed: () {
+            setState(() {
+              SnackBar snackBar = SnackBar(
+                  content: Text("Salvataggio in corso"));
+              Scaffold.of(context).showSnackBar(snackBar);
+            });
+          },
+          tooltip: 'Invio',
+          child: Icon(
+            Icons.send_sharp,
+            color: Colors.green[300],
+          ),
+        );
+      }, // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
