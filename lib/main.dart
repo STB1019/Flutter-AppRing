@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'widget/__init__.dart' as common_widget;
+
 void main() {
   runApp(MyApp());
 }
@@ -23,9 +25,9 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-
   MyHomePage({Key key, this.title}) : super(key: key);
-  factory MyHomePage.pincopallo(){
+
+  factory MyHomePage.pincopallo() {
     return null;
   }
 
@@ -46,20 +48,19 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String formVarText;
+  bool _formVarBool;
 
-  void _add_counter(){
-    _counter++;
-  }
-
-  _incrementCounter({String params_1}) {
-    setState(_add_counter);
-    if(params_1!=null)
-      return params_1;
+  @override
+  initState() {
+    super.initState();
+    formVarText = widget.title;
+    _formVarBool=false;
   }
 
   @override
   Widget build(BuildContext context) {
-    Orientation orientation=MediaQuery.of(context).orientation;
+    Orientation orientation = MediaQuery.of(context).orientation;
     return Scaffold(
       appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
@@ -79,15 +80,39 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
           ]),
-      body: orientation==Orientation.portrait ? Text("Dritto"):Text
-        ("Sdraiato"),
+      body: Form(
+        child: Column(
+          children: <Widget>[
+            TextFormField(
+              initialValue: formVarText,
+              validator:(String val){
+                if(val.trim().compareTo("tummolo")==0)
+                  return null;
+                return "ERRORE!";
+              }
+            ),
+            common_widget.formCheckboxLitTile(_formVarBool, (bool newValue){
+
+              setState((){
+                _formVarBool=newValue;
+              });
+            })
+          ],
+        ),
+        onChanged: () {},
+      ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          print("Hi dude, I'm here");
-          setState((){});
+        onPressed: () {
+          setState(() {
+            SnackBar snackBar=SnackBar(content:Text("Salvataggio in corso"));
+            Scaffold.of(context).showSnackBar(snackBar);
+          });
         },
         tooltip: 'Invio',
-        child: Icon(Icons.send_sharp,color: Colors.green[300],),
+        child: Icon(
+          Icons.send_sharp,
+          color: Colors.green[300],
+        ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
