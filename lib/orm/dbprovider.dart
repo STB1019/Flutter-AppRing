@@ -24,6 +24,7 @@ class DBMS {
   /// Creazione DB, compresa logica di creazione file
   Future<Database> createDB() async {
     String path = await _create_file_db();
+    print("PATH IS $path");
     Database obj_db;
     obj_db = await openDatabase(path, version: 1, onOpen: (Database db) async {
       return db;
@@ -47,9 +48,11 @@ class DBMS {
     return obj_db;
   }
 
-  newObj({String table, List<String> keys, List<String> values}) async {
+  newObj({String table, List<String> keys, List<dynamic> values}) async {
     if (table == null || keys == null || values == null) return null;
     var db = await database;
+    print(keys);
+    print(values);
     var raw = await db.rawInsert(
         "INSERT INTO $table (${keys.join(",")})"
         " VALUES (${List.generate(keys.length, (_) => "?").join(",")})",
@@ -105,17 +108,23 @@ class ModelEntity {
   factory ModelEntity.fromMap(Map<String, dynamic> obj) {
     return ModelEntity();
   }
+  factory ModelEntity.fromSQL(Map<String, dynamic> obj) {
+    return ModelEntity();
+  }
   static get dbCreateTable => "";
 
   Map<String, dynamic> toMap() {
+    return Map<String, dynamic>();
+  }
+  Map<String, dynamic> toSQL() {
     return Map<String, dynamic>();
   }
 
   static insert(DBMS db, ModelEntity obj, {String tableName}) async {
     await db.newObj(
         table: tableName,
-        keys: List.castFrom<dynamic, String>(obj.toMap().keys.toList()),
-        values: List.castFrom<dynamic, String>(obj.toMap().values.toList()));
+        keys: List.castFrom<dynamic, String>(obj.toSQL().keys.toList()),
+        values: List.castFrom<dynamic, dynamic>(obj.toSQL().values.toList()));
   }
 
 

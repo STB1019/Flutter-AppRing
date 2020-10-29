@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: <Widget>[
             TextFormField(
-              initialValue: formVarText,
+                initialValue: formVarText,
                 autovalidateMode: AutovalidateMode.always,
                 decoration: InputDecoration(hintText: "Aggiungi promemoria"),
                 maxLines: 5,
@@ -95,6 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 validator: (String val) {
                   if (val.trim().length == 0)
                     return "Attenzione, non è corretto inviare una stringa vuota";
+                  formVarText = val.trim();
                   return null;
                 },
                 onSaved: (String param) => param.trim(),
@@ -103,6 +104,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   // https://stackoverflow.com/a/56946311/5930652
                   FocusScope.of(context).unfocus();
                 }),
+            FutureBuilder(
+                future: TaskEntity.getAll(DBMS.entity.database), 
+                builder: (BuildContext context,AsyncSnapshot snapshot) {
+                  return Container();
+                  //TODO
+                })
           ],
         ),
         onChanged: () {},
@@ -116,9 +123,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   content: Text("Salvataggio in corso"),
                   duration: Duration(seconds: 2, milliseconds: 500),
                 ));
-                keyForm.currentState.save();
-                TaskEntity task=TaskEntity.fromMap({"name":formVarText});
-                ModelEntity.insert(DBMS.entity,task,tableName: TaskEntity.tableName);
+                TaskEntity task = TaskEntity.fromMap({"name": formVarText});
+                ModelEntity.insert(DBMS.entity, task,
+                    tableName: TaskEntity.tableName);
                 formVarText = "";
               });
             },
