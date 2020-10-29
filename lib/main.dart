@@ -1,3 +1,5 @@
+import 'package:appring/orm/dbprovider.dart';
+import 'package:appring/orm/task.dart';
 import 'package:flutter/material.dart';
 
 import 'widget/__init__.dart' as common_widget;
@@ -27,10 +29,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
-  factory MyHomePage.pincopallo() {
-    return null;
-  }
-
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -50,6 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String formVarText;
   bool _formVarBool;
+  final GlobalKey<FormState> keyForm = GlobalKey<FormState>();
 
   @override
   initState() {
@@ -60,64 +59,76 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Orientation orientation = MediaQuery
-        .of(context)
-        .orientation;
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
           title: Text(widget.title),
           actions: <Widget>[
             Builder(
               builder: (context) {
                 return IconButton(
-                  icon: Icon(Icons.agriculture),
+                  icon: Icon(Icons.sync),
                   onPressed: () {
-                    SnackBar snackbar =
-                    SnackBar(content: Text("Yo, I'm here!"));
-                    Scaffold.of(context).showSnackBar(snackbar);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Avvio reset DB"),
+                        duration: Duration(seconds: 1, milliseconds: 500)));
+                    DBMS.entity.createDB().then((value) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text("DB settato")));
+                    });
                   },
                 );
               },
             ),
           ]),
       body: Form(
+        key: keyForm,
         child: Column(
           children: <Widget>[
             TextFormField(
-                initialValue: formVarText,
+              initialValue: formVarText,
+                autovalidateMode: AutovalidateMode.always,
+                decoration: InputDecoration(hintText: "Aggiungi promemoria"),
+                maxLines: 5,
+                minLines: 1,
                 validator: (String val) {
-                  if (val.trim().compareTo("tummolo") == 0)
-                    return null;
-                  return "ERRORE!";
-                }
-            ),
-            common_widget.formCheckboxLitTile(_formVarBool, (bool newValue) {
-              setState(() {
-                _formVarBool = newValue;
-              });
-            })
+                  if (val.trim().length == 0)
+                    return "Attenzione, non è corretto inviare una stringa vuota";
+                  return null;
+                },
+                onSaved: (String param) => param.trim(),
+                onEditingComplete: () {
+                  // DESIGN [@redsandev] non sono proprio sicuro di cosa faccia questa funzione
+                  // https://stackoverflow.com/a/56946311/5930652
+                  FocusScope.of(context).unfocus();
+                }),
           ],
         ),
         onChanged: () {},
       ),
-      floatingActionButton: Builder(builder: (BuildContext context) {
-        return FloatingActionButton(
-          onPressed: () {
-            setState(() {
-              SnackBar snackBar = SnackBar(
-                  content: Text("Salvataggio in corso"));
-              Scaffold.of(context).showSnackBar(snackBar);
-            });
-          },
-          tooltip: 'Invio',
-          child: Icon(
-            Icons.send_sharp,
-            color: Colors.green[300],
-          ),
-        );
-      }, // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: Builder(
+        builder: (BuildContext context) {
+          return FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("Salvataggio in corso"),
+                  duration: Duration(seconds: 2, milliseconds: 500),
+                ));
+                keyForm.currentState.save();
+                TaskEntity task=TaskEntity.fromMap({"name":formVarText});
+                ModelEntity.insert(DBMS.entity,task,tableName: TaskEntity.tableName);
+                formVarText = "";
+              });
+            },
+            tooltip: 'Invio',
+            child: Icon(
+              Icons.add,
+              color: Colors.green[300],
+            ),
+          );
+        }, // This trailing comma makes auto-formatting nicer for build methods.
       ),
     );
   }
