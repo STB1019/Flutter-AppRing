@@ -14,7 +14,7 @@ class TaskEntity extends ModelEntity {
       "todo INTEGER DEFAULT 0"
       ");";
 
-  static get dbDropTable => "DROP TABLE $tableName;";
+  static get dbDropTable => "DROP TABLE IF EXISTS $tableName;";
 
   TaskEntity({this.id, this.name, this.todo: false});
 
@@ -38,6 +38,10 @@ class TaskEntity extends ModelEntity {
       "name": this.name.trim(),
       "todo": this.todo ? 1 : 0
     };
+  }
+
+  String toString(){
+    return "$id $name";
   }
 
   // DB Function

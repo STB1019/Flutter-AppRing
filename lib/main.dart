@@ -104,12 +104,32 @@ class _MyHomePageState extends State<MyHomePage> {
                   // https://stackoverflow.com/a/56946311/5930652
                   FocusScope.of(context).unfocus();
                 }),
-            FutureBuilder(
-                future: TaskEntity.getAll(DBMS.entity.database), 
-                builder: (BuildContext context,AsyncSnapshot snapshot) {
-                  return Container();
-                  //TODO
-                })
+            Expanded(
+                child: FutureBuilder(
+                    future: TaskEntity.getAll(DBMS.entity),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasError)
+                        return Text("Non funziona niente\n${snapshot.error}");
+                      if (snapshot.hasData) if (snapshot.data.length == 0)
+                        return Text("Nessun dato");
+                      snapshot.data.forEach((value) {
+                        print(value.runtimeType);
+                        print(value);
+                      });
+                      return Container(
+                          width: 200,
+                          child: ListView.builder(
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                TaskEntity task =
+                                    snapshot.data[index] as TaskEntity;
+                                return ListTile(
+                                  title: Text(task.name),
+                                  subtitle: Text(task.id),
+                                );
+                              }));
+                      //TODO
+                    }))
           ],
         ),
         onChanged: () {},

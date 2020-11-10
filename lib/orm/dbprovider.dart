@@ -10,41 +10,50 @@ class DBMS {
   String _nameDBFile = "db.sqlite";
 
   // Pattern singleton
-  static final DBMS entity = DBMS._();
-  DBMS._();
+  static final DBMS entity = DBMS.pippo();
+  DBMS.pippo();
 
   // Variabile di comodo
   Database _db;
 
   Future<Database> get database async {
     if (_db == null) _db = await createDB();
-    return _db;
+    return await _db;
   }
 
   /// Creazione DB, compresa logica di creazione file
   Future<Database> createDB() async {
     String path = await _create_file_db();
     print("PATH IS $path");
-    Database obj_db;
-    obj_db = await openDatabase(path, version: 1, onOpen: (Database db) async {
+    Database obj_db = await openDatabase(path, version: 1, onOpen: (Database db) async {
+      print("Open");
       return db;
     }, onCreate: (Database db, int version) async {
+      print("ON CREATE");
       List<dynamic> query = [TaskEntity];
+      print("ON CREATE ${query}");
       query.forEach((sql) async{
         var buffer;
         try{
+          print("TEST");
+          print(sql.dbDropTable);
           buffer=await db.rawQuery(sql.dbDropTable);
         }catch(e){
           print(e);
           print(buffer);
         }
+        print("TEST");
         buffer=await db.rawQuery(sql.dbCreateTable);
+          print(sql.dbCreateTable);
+        print("TEST 1");
         print(sql.dbCreateTable);
+        print("TEST 2");
         print(buffer);
       });
 
       return db;
     });
+    print("END");
     return obj_db;
   }
 
@@ -112,6 +121,7 @@ class ModelEntity {
     return ModelEntity();
   }
   static get dbCreateTable => "";
+  static get dbDropTable => "";
 
   Map<String, dynamic> toMap() {
     return Map<String, dynamic>();
