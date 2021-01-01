@@ -33,6 +33,7 @@ dependencies:
 #  sqflite: any
 #  sqflite_common_ffi: any # LINUX/MACOS DB
   path_provider: any
+  url_launcher: any
 
 dev_dependencies:
   flutter_test:

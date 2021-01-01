@@ -1,3 +1,5 @@
+import 'package:appring/skeleton/base.dart';
+import 'package:appring/widget/nav.dart';
 import 'package:flutter/material.dart';
 
 // following sample in https://flutter.dev/docs/cookbook/navigation/navigate-with-arguments
@@ -9,11 +11,13 @@ class AbovePageScreenArguments {
 
 class AbovePageWidget extends StatefulWidget {
   static String routeName = "/";
-  String title;
+  final String title; //= "-missing-title-";
+
+  AbovePageWidget({this.title: "-missing-title-"});
 
   @override
   AbovePageInitialState createState() {
-    // TODO a seconda dello stato in cui versa l'app, è necessario visualizzare una specifica pagina
+    // TODO using state's App, is a good option to choose a specific state
     return AbovePageInitialState();
   }
 }
@@ -33,19 +37,19 @@ class AbovePageInitialState extends State<AbovePageWidget> {
   Widget build(BuildContext context) {
     final AbovePageScreenArguments args =
         ModalRoute.of(context).settings.arguments;
-    print(args);
+    print("ARGS ARE ${args}");
     if (title == null) {
       if (args != null) title = args.title;
     }
     return Scaffold(
       appBar: AppBar(
-        actions: [],
+        title: Text(title),
       ),
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [Text("Prova")],
-        ),
+      drawer: Drawer(
+        child: BuilderNavWidget(),
+      ),
+      body: Column(
+        children: <Widget>[Center(child: Text("Welcome to $title"))],
       ),
     );
   }
