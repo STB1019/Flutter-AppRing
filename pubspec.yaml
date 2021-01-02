@@ -30,9 +30,10 @@ dependencies:
   cupertino_icons: ^1.0.0
 #  flutter_blue: any
   uuid: any
-  sqflite: any
-  sqflite_common_ffi: any # LINUX/MACOS DB
+#  sqflite: any
+#  sqflite_common_ffi: any # LINUX/MACOS DB
   path_provider: any
+  url_launcher: any
 
 dev_dependencies:
   flutter_test:
