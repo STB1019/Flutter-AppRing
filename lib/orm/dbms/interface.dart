@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
 mixin ORM {
@@ -61,3 +62,4 @@ mixin ORM {
     return await _db.delete(table, where: where, whereArgs: whereArgs);
   }
 }
+
