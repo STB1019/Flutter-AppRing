@@ -1,18 +1,23 @@
-import 'package:appring/pages/above.dart';
-import 'package:appring/pages/contacts.dart';
+import 'package:appring/pages/__init__.dart' as pages;
 import 'package:flutter/material.dart';
 
 import './index.dart';
 
-// TODO verify if still correct
+
 class BaseRoute {
   BuildIndex route;
   BaseRoute(BuildContext context) {
     route = BuildIndex(context: context);
     route.addVoice = IndexVoiceBLOC(
-        AbovePageWidget.routeName, "Titolo", AbovePageWidget(title: "Titolo"));
-    route.addVoice = IndexVoiceBLOC(ContactsPageWidget.routeName, "Contatti",
-        ContactsPageWidget(title: "Contatti"));
+        pages.AbovePageWidget.routeName, "Homepage", pages.AbovePageWidget(title: "Bluetooth manager"));
+    route.addVoice = IndexVoiceBLOC(
+        pages.ScannerPageWidget.routeName, "Scanner Raw Devices", pages.ScannerPageWidget(title: "Scanner Raw Devices"));
+    IndexVoiceBLOC temp =IndexVoiceBLOC(
+        pages.EntityPageWidget.routeName, "Entity Data", pages.EntityPageWidget());
+    temp.setInternalLink();
+    route.addVoice = temp;
+    route.addVoice = IndexVoiceBLOC(pages.ContactsPageWidget.routeName, "Contatti",
+        pages.ContactsPageWidget(title: "Contatti"));
   }
 
   get init => route.init();
@@ -23,6 +28,7 @@ class BaseRoute {
   List<IndexVoiceBLOC> get drawer_voices_as_list => route
       .filter_by_platform(platform: supported_platform.all)
       .values
+      .toList().where((IndexVoiceBLOC element) => element.avaiable_drawer)
       .toList();
 }
 
