@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 enum supported_platform {
+  avaiablePublic,
   all,
   mobile,
   desktop,
@@ -30,6 +31,7 @@ class IndexVoiceBLOC {
   // menu selector
   Map<supported_platform, bool> menuFilter = () {
     return {
+      supported_platform.avaiablePublic: true,
       supported_platform.all: true,
       supported_platform.android: true,
       supported_platform.ios: true,
@@ -49,7 +51,7 @@ class IndexVoiceBLOC {
   String get route => this.labelRoute;
 
   // get bool-map
-  bool get avaiable_drawer => menuFilter[supported_platform.all];
+  bool get avaiable_drawer => menuFilter[supported_platform.all] && menuFilter[supported_platform.avaiablePublic];
 
   bool get avaiable_drawer_mobile =>
       menuFilter[supported_platform.ios] ||
@@ -97,6 +99,13 @@ class IndexVoiceBLOC {
 
   bool filter_by_platform(supported_platform platform) =>
       menuFilter.containsKey(platform) ? menuFilter[platform] : false;
+
+  void setInternalLink(){
+    menuFilter[supported_platform.avaiablePublic]= false;
+  }
+  void setGlobalLink(){
+    menuFilter[supported_platform.avaiablePublic]= true;
+  }
 }
 
 /*
