@@ -71,8 +71,7 @@ class ScannerPageInitialState extends State<ScannerPageWidget> {
                 icon: this.iconRadio,
                 onPressed: () async {
                   widget.driver.switchRadio();
-                  setIconRadio();
-                  setState(() {});
+                  setState(() {setIconRadio();});
                 }),
             IconButton(
                 icon: this.iconBLE,
@@ -138,7 +137,7 @@ class ScannerPageInitialState extends State<ScannerPageWidget> {
         );
       },
       onLongPress: () async {
-        bool status = await device.connected();
+        bool status = await device.isConnected();
         if (status)
           device.entity.disconnectOrCancelConnection();
         else
@@ -146,7 +145,7 @@ class ScannerPageInitialState extends State<ScannerPageWidget> {
         setState(() {});
       },
       subtitle: FutureBuilder<bool>(
-        future: device.connected(),
+        future: device.isConnected(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           String phrase = "non accessibile";
           if (snapshot.hasData)
@@ -158,10 +157,11 @@ class ScannerPageInitialState extends State<ScannerPageWidget> {
     );
   }
 
+  /// Define a view policy to show the radio states of antenna's Bluetooth
   void setIconRadio() async {
     switch (await widget.driver.statusRadio()) {
       case ble.BluetoothRadioStatus.OFF:
-        this.iconRadio = Icon(Icons.portable_wifi_off, color: Colors.white);
+        this.iconRadio = Icon(Icons.portable_wifi_off, color: Colors.purple);
         break;
       case ble.BluetoothRadioStatus.ON:
         this.iconRadio = Icon(Icons.wifi_tethering, color: Colors.white);
@@ -182,10 +182,11 @@ class ScannerPageInitialState extends State<ScannerPageWidget> {
     }
   }
 
+  /// Define the policy to represents scanner's status
   void setIconScanner() {
     switch (widget.driver.statusScanner) {
       case ble.BluetoothScannerStatus.OFF:
-        this.iconBLE = Icon(Icons.bluetooth_disabled, color: Colors.white);
+        this.iconBLE = Icon(Icons.bluetooth_disabled, color: Colors.purple);
         break;
       case ble.BluetoothScannerStatus.ON:
         this.iconBLE = Icon(Icons.bluetooth_connected, color: Colors.white);
