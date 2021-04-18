@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import '../entity/__init__.dart' as entity;
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -7,6 +7,7 @@ class DatabaseManager {
   static Database _dbObj;
   static String _dbPath, _dbFolder;
   static bool _sObj = false, _sPath = false, _sAvaiable = false;
+  static final String id_field="id";
   static final String _dbName = "dbDevice.db";
   static final DatabaseManager _databaseManager = DatabaseManager._internal();
 
@@ -73,8 +74,8 @@ class DatabaseManager {
 
   Future dbCreateTable() {
     try {
-      return dbExecute("SELECT * FROM Device").then((value) => value,
-          onError: (e) {
+      return dbExecute(entity.DeviceHardware.verifyIfExistTable())
+          .then((value) => value, onError: (e) {
         print("CREATE TABLE");
         print(e);
         return dbForceCreateTable();
@@ -87,9 +88,7 @@ class DatabaseManager {
   }
 
   Future dbForceCreateTable() {
-    return dbExecute(
-            "CREATE TABLE Device (id TEXT PRIMARY KEY,ble_cfg TEXT DEFAULT NULL)")
-        .then((value) {
+    return dbExecute(entity.DeviceHardware.createTable(id_field:id_field)).then((value) {
       print("ESITO CREATE TABLE ${value}");
       _sAvaiable = true;
     }, onError: (error) {
@@ -100,7 +99,7 @@ class DatabaseManager {
 
   Future dbDropTable() {
     try {
-      return dbExecute("DROP TABLE Device");
+      return dbExecute(entity.DeviceHardware.dropTable());
     } catch (e) {
       print("Impossibile cancellare la tabella");
       print(e);
