@@ -1,8 +1,6 @@
 import 'package:flutter_ble_lib/flutter_ble_lib.dart';
 
-/**
- *
- */
+/// 
 class Device {
   Peripheral entity;
   String label, uuid,addr;

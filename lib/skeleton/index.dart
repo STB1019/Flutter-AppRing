@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 enum supported_platform {
-  avaiablePublic,
+  availablePublic,
   all,
   mobile,
   desktop,
@@ -31,7 +31,7 @@ class IndexVoiceBLOC {
   // menu selector
   Map<supported_platform, bool> menuFilter = () {
     return {
-      supported_platform.avaiablePublic: true,
+      supported_platform.availablePublic: true,
       supported_platform.all: true,
       supported_platform.android: true,
       supported_platform.ios: true,
@@ -51,38 +51,38 @@ class IndexVoiceBLOC {
   String get route => this.labelRoute;
 
   // get bool-map
-  bool get avaiable_drawer => menuFilter[supported_platform.all] && menuFilter[supported_platform.avaiablePublic];
+  bool get available_drawer => menuFilter[supported_platform.all] && menuFilter[supported_platform.availablePublic];
 
-  bool get avaiable_drawer_mobile =>
+  bool get available_drawer_mobile =>
       menuFilter[supported_platform.ios] ||
       menuFilter[supported_platform.android];
 
-  bool get avaiable_drawer_mobile_android =>
+  bool get available_drawer_mobile_android =>
       menuFilter[supported_platform.android];
 
-  bool get avaiable_drawer_mobile_apple =>
+  bool get available_drawer_mobile_apple =>
       menuFilter[supported_platform.ios] ||
       menuFilter[supported_platform.ipados];
 
-  bool get avaiable_drawer_desktop =>
+  bool get available_drawer_desktop =>
       menuFilter[supported_platform.linux] ||
       menuFilter[supported_platform.macos] ||
       menuFilter[supported_platform.android];
 
-  bool get avaiable_drawer_desktop_linux =>
+  bool get available_drawer_desktop_linux =>
       menuFilter[supported_platform.linux];
 
-  bool get avaiable_drawer_desktop_apple =>
+  bool get available_drawer_desktop_apple =>
       menuFilter[supported_platform.macos];
 
-  bool get avaiable_drawer_desktop_windows =>
+  bool get available_drawer_desktop_windows =>
       menuFilter[supported_platform.windows];
 
-  set avaiable_android(bool value) {
+  set available_android(bool value) {
     menuFilter[supported_platform.android] = value;
   }
 
-  set avaiable_apple(bool value) {
+  set available_apple(bool value) {
     menuFilter[supported_platform.ios] = value;
     menuFilter[supported_platform.ipados] = value;
     menuFilter[supported_platform.macos] = value;
@@ -101,10 +101,10 @@ class IndexVoiceBLOC {
       menuFilter.containsKey(platform) ? menuFilter[platform] : false;
 
   void setInternalLink(){
-    menuFilter[supported_platform.avaiablePublic]= false;
+    menuFilter[supported_platform.availablePublic]= false;
   }
   void setGlobalLink(){
-    menuFilter[supported_platform.avaiablePublic]= true;
+    menuFilter[supported_platform.availablePublic]= true;
   }
 }
 
@@ -118,7 +118,7 @@ class BuildIndex {
   BuildIndex({this.context});
 
   /**
-   * Add only voices aren't already avaiable/added to treeVoices
+   * Add only voices aren't already available/added to treeVoices
    */
   set addVoice(IndexVoiceBLOC candidate) {
     treeVoices.putIfAbsent(candidate.route, () => candidate);

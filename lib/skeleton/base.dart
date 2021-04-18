@@ -28,7 +28,7 @@ class BaseRoute {
   List<IndexVoiceBLOC> get drawer_voices_as_list => route
       .filter_by_platform(platform: supported_platform.all)
       .values
-      .toList().where((IndexVoiceBLOC element) => element.avaiable_drawer)
+      .toList().where((IndexVoiceBLOC element) => element.available_drawer)
       .toList();
 }
 
