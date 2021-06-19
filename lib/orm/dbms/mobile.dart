@@ -40,9 +40,14 @@ class DatabaseManager {
 
   initDatabase() async {
     String path = await dbPath;
-    _dbObj = await openDatabase(path,
+    _dbObj = await openDatabase(
+      // path file where exist db file
+      path,
+      // version db, different by installation
             version: 1,
+      // set function for config db
             onConfigure: _dbOnConfigure,
+      // callend only once
             onCreate: _dbOnCreate,
             onDowngrade: onDatabaseDowngradeDelete)
         .then((value) {
@@ -69,17 +74,23 @@ class DatabaseManager {
   }
 
   Future dbExecute(String sql) {
-    return _dbObj.execute(sql);
+    try{
+      return _dbObj.execute(sql);
+    }catch(e){
+      return null;
+    }
   }
 
   Future dbCreateTable() {
     try {
-      return dbExecute(entity.DeviceHardware.verifyIfExistTable())
+      var value= dbExecute(entity.DeviceHardware.verifyIfExistTable())
           .then((value) => value, onError: (e) {
         print("CREATE TABLE");
         print(e);
         return dbForceCreateTable();
       });
+      print("FAIL?? ${value}");
+      return value;
     } catch (e) {
       print("CREATE TABLE");
       print(e);
@@ -98,8 +109,10 @@ class DatabaseManager {
   }
 
   Future dbDropTable() {
+    return null;
     try {
-      return dbExecute(entity.DeviceHardware.dropTable());
+       var value=dbExecute(entity.DeviceHardware.dropTable());
+      return value;
     } catch (e) {
       print("Impossibile cancellare la tabella");
       print(e);

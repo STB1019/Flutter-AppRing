@@ -18,6 +18,7 @@ class BaseRoute {
     route.addVoice = temp;
     route.addVoice = IndexVoiceBLOC(pages.ContactsPageWidget.routeName, "Contatti",
         pages.ContactsPageWidget(title: "Contatti"));
+    route.addVoice=IndexVoiceBLOC(pages.ChainEntityPageWidget.routeName,"Manage Ble Elements",pages.ChainEntityPageWidget(title:"Manage entity"));
   }
 
   get init => route.init();

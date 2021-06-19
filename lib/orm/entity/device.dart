@@ -16,6 +16,11 @@ class DeviceHardware {
         Uuid().v4().toString(), "Interruttore 1", "Gestore scale Est", true);
   }
 
+  factory DeviceHardware.byParams(String label){
+    return DeviceHardware._internal(
+        Uuid().v4().toString(), label, "Descrizione dispositivo ${label}", true);
+  }
+
   static String createTable({String id_field: "id"}) {
     return "CREATE TABLE Device (${id_field} TEXT PRIMARY KEY,label TEXT, description TEXT, available INTEGER DEFAULT 0)";
   }
@@ -38,17 +43,25 @@ class DeviceHardware {
 
   String saveIntoDB({String id_field: "id"}) {
     Map<String, dynamic> map_values = {
-      "label": label,
-      "description": description,
+      "label": "'${label}'",
+      "description": "'${description}'",
       "available": available ? 1 : 0
     };
     if (toSave) {
       toSave = false;
+      /// INSERT INTO table_name ("id","label") VAULES (1,"test");
+      /// ...
+      /// [0,[1,2]]=[_,_]
+      /// [0,...[1,2,3,4]]=[0,1,2,3,4].joint("Sep")=Sep0 Sep1 Sep2 Sep3
       return "INSERT INTO ${tableName} (${[
         id_field,
         ...map_values.keys.toList()
-      ].join(",")}) VALUES (${[_id, ...map_values.values.toList()].join(",")})";
+      ].join(",")}) VALUES ('${_id}',${map_values.values.toList().join(",")})";
     }
     return "UPDATE ${tableName} SET ${map_values.entries.map((MapEntry<String, dynamic> e) => "${e.key} = ${e.value}").toList().join(",")} WHERE ${id_field} == ${this._id}";
+  }
+
+  String toString(){
+    return "${label} ${available ? 'ok' : 'ko'}";
   }
 }

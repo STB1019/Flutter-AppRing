@@ -30,6 +30,7 @@ class AbovePageWidget extends StatefulWidget {
 
 class AbovePageInitialState extends State<AbovePageWidget> {
   String title;
+  // Orm is a singleton to manage access to DB (a.k.a to DBMS)
   DatabaseManager orm;
   bool workOnDB = false;
 
@@ -70,7 +71,7 @@ class AbovePageInitialState extends State<AbovePageWidget> {
       ),
       body: Column(
         children: <Widget>[
-          Center(child: Text("Welcome to $title")),
+          // Center(child: Text("Welcome to $title")),
           FutureBuilder(
               future: orm.db,
               builder:
@@ -80,6 +81,7 @@ class AbovePageInitialState extends State<AbovePageWidget> {
                   color: Colors.blueAccent,
                 );
                 Text title = Text("Database deve essere creato");
+                /// Il mio widget ha incontrato uno stato di errore, oppure il future non ritorna nessun dato?
                 if (snapshot.hasError || !snapshot.hasData)
                   Icon(
                     Icons.error,
@@ -114,10 +116,9 @@ class AbovePageInitialState extends State<AbovePageWidget> {
                   leading: resp,
                   title: title,
                   onTap: () {
-                    setState(() {
                       orm.initDatabase();
                       setState(() {});
-                    });
+                    
                   },
                 );
               }),
@@ -137,8 +138,11 @@ class AbovePageInitialState extends State<AbovePageWidget> {
                     });
                   }else{
                     notificationString(context, "Inizializzazione Database avviata");
+                    print("step 1");
                     await orm.dbDropTable();
+                    print("step 2");
                     await orm.dbCreateTable();
+                    print("step 3");
                     notificationString(context, orm.statusDBAvaiable ? "Iniziazilizzazione Database completata": "Impossibile completare l'inizializzazione");
                     setState(() {
                       print("ORM IS ${orm.statusDBAvaiable}");

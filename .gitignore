@@ -20,6 +20,9 @@ doc/api/
 *.js.deps
 *.js.map
 /android/
+!/android/app/src/build.gradle
+!/android/app/src/main/AndroidManifest.xml
 /ios/
+!/ios/Runner/info.plist
 /.idea/
 /.dart_tool/
